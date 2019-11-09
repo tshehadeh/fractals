@@ -1,0 +1,91 @@
+float e = 2.71828182845904523536028747135266249775724709369995;
+float angle = 0;
+void setup() {
+  size(1000, 600);
+  colorMode(HSB, 1);
+}
+void draw() {
+  
+  float ca = map(mouseX,0,width,-TWO_PI,TWO_PI);
+  float cb = map(mouseY,0,height,-TWO_PI,TWO_PI);
+  
+  //float ca = cos(0.7885 * pow(e, angle));
+  //float cb = sin(0.7885 * pow(e, angle));
+  
+   angle = map(mouseX,0,width,0,TWO_PI);
+  
+  background(255);
+  
+  float w = 5;
+  float h = (w * height) / width;
+  
+
+  float xmin = -w/2;
+  float ymin = -h/2;
+
+  loadPixels();
+
+  int maxiterations = 100;
+
+  // x goes from xmin to xmax
+  float xmax = xmin + w;
+  
+  // y goes from ymin to ymax
+  float ymax = ymin + h;
+
+  float dx = (xmax - xmin) / (width);
+  float dy = (ymax - ymin) / (height);
+
+  // Start y
+  float y = ymin;
+  for (int j = 0; j < height; j++) {
+    // Start x
+    float x = xmin;
+    for (int i = 0; i < width; i++) {
+
+      float a = x;
+      float a1 = x;
+      float b = y;
+      float b1 = y;
+      int n = 0;
+
+      //float ia = map(mouseX,0,width,0,TWO_PI);
+      
+      while (n < maxiterations) {
+        float aa = a * a;
+        float bb = b * b;
+        
+        if (aa + bb > 4.0) {
+          break;  // Bail
+        }
+        float twoab = 2.0 * a * b;
+        a = aa - bb + ca;
+        b = twoab + cb;
+        
+        
+        
+        n++;
+        
+        //float xtmp = pow((aa + bb), cos(2 * atan2(b, a)) + 0.7885 * pow(e, ia * x));
+        //b = pow((aa + bb), sin(2 * atan2(b, a)) + 0.7885 * pow(e, ia * x));
+        //a = xtmp;
+        
+        //+ 0.7885 * pow(e, ia * x
+        
+ 
+      }
+       
+      
+      if (n == maxiterations) {
+        pixels[i+j*width] = color(0);
+      } else {
+        float hu = sqrt(float(n) / maxiterations);
+        pixels[i+j*width] = color(hu, 255, 150);
+      }
+      x += dx;
+    }
+    y += dy;
+  }
+  updatePixels();
+  println(frameRate);
+}
