@@ -1,0 +1,76 @@
+
+float angle = 0;
+void setup() {
+  size(1000, 600);
+  colorMode(HSB, 1);
+}
+void draw() {
+
+  background(255);
+
+  float w = 5;
+  float h = (w * height) / width;
+  
+
+  float xmin = -w/2;
+  float ymin = -h/2;
+
+ 
+  loadPixels();
+
+  int maxiterations = 100;
+
+  float xmax = xmin + w;
+  
+  float ymax = ymin + h;
+
+  float dx = (xmax - xmin) / (width);
+  float dy = (ymax - ymin) / (height);
+
+  // Start y
+  float y = ymin;
+  for (int j = 0; j < height; j++) {
+    // Start x
+    float x = xmin;
+    for (int i = 0; i < width; i++) {
+
+      // Now we test, as we iterate z = z^2 + cm does z tend towards infinity?
+      float a = x;
+      float a1 = x;
+      float b = y;
+      float b1 = y;
+      int n = 0;
+
+      
+      while (n < maxiterations) {
+        float aa = a * a;
+        float bb = b * b;
+        
+        if (aa + bb > 4.0) {
+          break;  // Bail
+        }
+        float twoab = 2.0 * a * b;
+        a = aa - bb + x;
+        b = twoab + y;
+        
+        
+        
+        n++;
+        
+      }
+       
+      // We color each pixel based on how long it takes to get to infinity
+      // If we never got there, let's pick the color black
+      if (n == maxiterations) {
+        pixels[i+j*width] = color(0);
+      } else {
+        float hu = sqrt(float(n) / maxiterations);
+        pixels[i+j*width] = color(hu, 255, 150);
+      }
+      x += dx;
+    }
+    y += dy;
+  }
+  updatePixels();
+  println(frameRate);
+}
